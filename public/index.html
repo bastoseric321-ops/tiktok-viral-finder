@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIRAL FINDER RADAR</title>
+  <title>VIRAL RADAR</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
@@ -85,34 +85,31 @@
       const query = document.getElementById('customSearchInput').value;
       
       const container = document.getElementById('radarContainer');
-      container.innerHTML = '<div class="text-center py-12 text-cyan-400 text-sm animate-pulse">📡 Escaneando fontes ocultas e conteúdos recentes...</div>';
+      container.innerHTML = '<div class="text-center py-12 text-cyan-400 text-sm animate-pulse">📡 Escaneando fontes ocultas...</div>';
 
       try {
         const res = await fetch(`/api/radar?niche=${encodeURIComponent(niche)}&q=${encodeURIComponent(query)}`);
-        const videos = await res.json();
         
-        container.innerHTML = '';
+        if(!res.ok) throw new Error('Erro na resposta do servidor');
 
-        if (videos.length === 0) {
-          container.innerHTML = '<div class="text-center py-12 text-slate-500 text-sm">Nenhum resultado recente encontrado com este filtro. Tente outro termo.</div>';
-          return;
-        }
+        const videos = await res.json();
+        container.innerHTML = '';
 
         videos.forEach(v => {
           container.innerHTML += `
-            <div class="bg-slate-900 border border-slate-800 hover:border-cyan-500/50 p-4 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition shadow-lg">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition shadow-lg">
               <div class="space-y-1 flex-1">
                 <div class="flex items-center gap-2 flex-wrap">
                   <span class="font-bold text-cyan-400 text-sm">${v.creator}</span>
                   <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2 py-0.5 rounded text-xs">${v.niche}</span>
-                  <span class="bg-pink-500/10 text-pink-400 border border-pink-500/20 px-2 py-0.5 rounded text-xs font-semibold">👀 ${v.views} (Início de Curva)</span>
+                  <span class="bg-pink-500/10 text-pink-400 border border-pink-500/20 px-2 py-0.5 rounded text-xs font-semibold">👀 ${v.views}</span>
                 </div>
                 <p class="text-sm font-semibold text-slate-200">💎 Oportunidade: <span class="text-pink-300 font-normal">${v.tag}</span></p>
-                <p class="text-xs text-slate-400 bg-slate-950 p-2.5 rounded-xl border border-slate-800">🎯 <b>Estratégia de Captura:</b> ${v.tip}</p>
+                <p class="text-xs text-slate-400 bg-slate-950 p-2.5 rounded-xl border border-slate-800">🎯 <b>Estratégia:</b> ${v.tip}</p>
               </div>
               <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
                 <a href="${v.link}" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1 transition">
-                  <span>Ver Fonte Original</span> ↗
+                  <span>Assistir</span> ↗
                 </a>
                 <button onclick='saveIdea(${JSON.stringify(v)})' class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 font-medium transition text-slate-300">
                   ⭐ Salvar
@@ -122,26 +119,32 @@
           `;
         });
       } catch (err) {
-        container.innerHTML = '<div class="text-center py-12 text-red-400 text-sm">Erro ao conectar com o radar. Tente novamente.</div>';
+        // Fallback local caso a API enfrente instabilidade
+        container.innerHTML = `
+          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-3">
+            <p class="text-pink-400 font-bold text-sm">📡 Modalidade de Pesquisa Direta Ativada:</p>
+            <p class="text-xs text-slate-300">Abrindo os resultados de pesquisas atualizadas em tempo real para o termo selecionado.</p>
+            <a href="https://www.tiktok.com/search?q=${encodeURIComponent(query || 'cortes podcast viral')}" target="_blank" class="inline-block bg-pink-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
+              Abrir Resultados Atualizados no TikTok ↗
+            </a>
+          </div>
+        `;
       }
     }
 
-    async function saveIdea(video) {
-      await fetch('/api/ideas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(video)
-      });
-      alert('Salvo na sua base de produção!');
+    function saveIdea(video) {
+      let saved = JSON.parse(localStorage.getItem('viral_ideas') || '[]');
+      saved.push(video);
+      localStorage.setItem('viral_ideas', JSON.stringify(saved));
+      alert('Salvo com sucesso!');
     }
 
-    async function loadIdeas() {
-      const res = await fetch('/api/ideas');
-      const ideas = await res.json();
+    function loadIdeas() {
+      let saved = JSON.parse(localStorage.getItem('viral_ideas') || '[]');
       const container = document.getElementById('ideasContainer');
-      container.innerHTML = ideas.length ? '' : '<div class="text-center py-12 text-slate-500 text-sm">Nenhum item salvo ainda.</div>';
+      container.innerHTML = saved.length ? '' : '<div class="text-center py-12 text-slate-500 text-sm">Nenhum item salvo ainda.</div>';
       
-      ideas.forEach(i => {
+      saved.forEach(i => {
         container.innerHTML += `
           <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
             <div>
