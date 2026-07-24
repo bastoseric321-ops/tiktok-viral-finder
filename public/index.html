@@ -3,161 +3,177 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIRAL RADAR</title>
+  <title>VIRAL RADAR & AUTO-CLIPPER</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
+
   <!-- Header -->
   <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-4 py-3">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2">
-        <span class="text-xl">📡</span>
+        <span class="text-xl">🚀</span>
         <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
-          VIRAL RADAR <span class="text-xs bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded border border-pink-500/30">Oculto</span>
+          VIRAL RADAR & CLIPPER
         </h1>
       </div>
-      <nav class="space-x-2 text-sm font-medium">
-        <button onclick="showSection('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg bg-pink-600/20 text-pink-400 transition">Radar</button>
-        <button onclick="showSection('ideias')" id="nav-ideias" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Salvos</button>
-      </nav>
+      <span class="text-xs bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded-full border border-cyan-500/30 font-bold">Automação Completa</span>
     </div>
   </header>
 
   <main class="max-w-4xl mx-auto p-4 space-y-6">
-    <!-- DASHBOARD -->
-    <section id="sec-dashboard" class="space-y-4">
-      <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3">
-        <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
-          <div class="w-full sm:flex-1">
-            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Busca Profunda / Termo Oculto</label>
-            <input type="text" id="customSearchInput" placeholder="Ex: cortes podcast, segredo finanças, IA oculta..." class="w-full bg-slate-800 text-white px-4 py-2.5 rounded-xl border border-slate-700 text-sm focus:outline-none focus:border-pink-500 transition">
-          </div>
-          <div class="w-full sm:w-auto">
-            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Nicho</label>
-            <select id="nicheSelect" class="w-full sm:w-48 bg-slate-800 text-white px-3 py-2.5 rounded-xl border border-slate-700 text-sm focus:outline-none">
-              <option value="Todos">Todos os Nichos</option>
-              <option value="Podcasts">🎙️ Podcasts / Cortes</option>
-              <option value="Humor">😂 Humor</option>
-              <option value="Motivacao">🔥 Motivação</option>
-              <option value="Financas">💰 Finanças</option>
-              <option value="Tecnologia">🤖 Tecnologia & IA</option>
-            </select>
-          </div>
+
+    <!-- SEÇÃO 1: RADAR DE VÍDEOS EM ALTA (BUSCA AUTOMÁTICA) -->
+    <section class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-lg font-bold flex items-center gap-2">🔥 Radar de Vídeos em Alta no YouTube</h2>
+          <p class="text-xs text-slate-400">O robô encontra os melhores podcasts e vídeos recomendados para fazer cortes hoje.</p>
         </div>
-        <button onclick="fetchRadarData()" class="w-full bg-gradient-to-r from-cyan-600 to-pink-600 hover:from-cyan-500 hover:to-pink-500 text-white font-bold py-3 rounded-xl text-sm shadow-lg transition flex items-center justify-center gap-2">
-          <span>🔍 Varredura em Todos os Lugares (Radar Oculto)</span>
+      </div>
+
+      <!-- Filtros de Categoria -->
+      <div class="flex flex-wrap gap-2 pt-2">
+        <button onclick="buscarEmAlta('podcasts')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-cyan-300 font-medium">🎙️ Podcasts Famosos</button>
+        <button onclick="buscarEmAlta('motivacional')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-pink-300 font-medium">💡 Histórias / Viradas</button>
+        <button onclick="buscarEmAlta('negocios')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-emerald-300 font-medium">💰 Finanças & Negócios</button>
+        <button onclick="buscarEmAlta('curiosidades')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-amber-300 font-medium">🧠 Curiosidades / IA</button>
+      </div>
+
+      <!-- Carregamento do Radar -->
+      <div id="radarLoading" class="hidden text-center py-4">
+        <p class="text-xs text-cyan-400 animate-pulse font-mono">🔍 Rastreando o YouTube em busca dos vídeos com maior engajamento recente...</p>
+      </div>
+
+      <!-- Lista de Vídeos Encontrados -->
+      <div id="radarContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"></div>
+    </section>
+
+
+    <!-- SEÇÃO 2: PROCESSADOR E GERADOR DE CORTES -->
+    <section class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4" id="secaoProcessador">
+      <div class="text-center space-y-1">
+        <h2 class="text-lg font-bold">✂️ Gerador de Cortes por Inteligência Artificial</h2>
+        <p class="text-xs text-slate-400">Cole o link de um vídeo do YouTube ou escolha um vídeo acima no Radar.</p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2 max-w-xl mx-auto">
+        <input type="text" id="videoUrl" placeholder="Cole aqui o link do YouTube..." class="bg-slate-800 border border-slate-700 text-white text-sm px-4 py-3 rounded-xl w-full focus:outline-none focus:border-pink-500">
+        <button onclick="gerarCortes()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition shrink-0">
+          ✂️ Processar Vídeo
         </button>
       </div>
 
-      <div class="bg-cyan-950/20 border border-cyan-500/20 p-4 rounded-xl flex items-center gap-3">
-        <div class="text-cyan-400 text-lg">⚡</div>
-        <div class="text-xs text-slate-300">
-          <b>Modo Rastreador Ativado:</b> Buscando conteúdos recém-publicados com baixa visualização e alto potencial de explosão algorítmica.
-        </div>
+      <!-- Loading dos Cortes -->
+      <div id="loading" class="hidden text-center py-6 space-y-2">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-pink-500"></div>
+        <p class="text-xs text-cyan-400 font-mono">Mapeando picos de retenção e gerando sugestões de cortes...</p>
       </div>
 
-      <!-- Container de Resultados -->
-      <div id="radarContainer" class="space-y-3">
-        <!-- Inserido dinamicamente -->
+      <!-- Resultados dos Cortes Gerados -->
+      <div id="results" class="hidden space-y-4">
+        <hr class="border-slate-800">
+        <h3 class="text-sm font-bold text-pink-400 uppercase tracking-wider">Cortes Prontos Identificados:</h3>
+        <div id="clipsContainer" class="grid gap-3"></div>
       </div>
     </section>
 
-    <!-- IDEIAS -->
-    <section id="sec-ideias" class="hidden space-y-4">
-      <h2 class="text-xl font-bold">Conteúdos Salvos para Produção</h2>
-      <div id="ideasContainer" class="grid gap-3"></div>
-    </section>
   </main>
 
   <script>
-    function showSection(name) {
-      ['dashboard', 'ideias'].forEach(sec => {
-        document.getElementById(`sec-${sec}`).classList.add('hidden');
-        document.getElementById(`nav-${sec}`).className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition";
-      });
-      document.getElementById(`sec-${name}`).classList.remove('hidden');
-      document.getElementById(`nav-${name}`).className = "px-3 py-1.5 rounded-lg bg-pink-600/20 text-pink-400 transition font-semibold";
-      if (name === 'ideias') loadIdeas();
-    }
+    // Carrega o radar assim que abre a página
+    window.onload = () => buscarEmAlta('podcasts');
 
-    async function fetchRadarData() {
-      const niche = document.getElementById('nicheSelect').value;
-      const query = document.getElementById('customSearchInput').value;
-      
-      const container = document.getElementById('radarContainer');
-      container.innerHTML = '<div class="text-center py-12 text-cyan-400 text-sm animate-pulse">📡 Escaneando fontes ocultas...</div>';
+    async function buscarEmAlta(categoria) {
+      document.getElementById('radarLoading').classList.remove('hidden');
+      document.getElementById('radarContainer').innerHTML = '';
 
       try {
-        const res = await fetch(`/api/radar?niche=${encodeURIComponent(niche)}&q=${encodeURIComponent(query)}`);
-        
-        if(!res.ok) throw new Error('Erro na resposta do servidor');
+        const res = await fetch(`/api/radar?categoria=${categoria}`);
+        const data = await res.json();
+        document.getElementById('radarLoading').classList.add('hidden');
 
-        const videos = await res.json();
-        container.innerHTML = '';
-
-        videos.forEach(v => {
+        const container = document.getElementById('radarContainer');
+        data.videos.forEach(v => {
           container.innerHTML += `
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition shadow-lg">
-              <div class="space-y-1 flex-1">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-bold text-cyan-400 text-sm">${v.creator}</span>
-                  <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2 py-0.5 rounded text-xs">${v.niche}</span>
-                  <span class="bg-pink-500/10 text-pink-400 border border-pink-500/20 px-2 py-0.5 rounded text-xs font-semibold">👀 ${v.views}</span>
+            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl flex flex-col justify-between space-y-3 hover:border-slate-700 transition">
+              <div class="space-y-1">
+                <div class="flex justify-between items-center text-[10px]">
+                  <span class="text-cyan-400 font-bold uppercase">${v.canal}</span>
+                  <span class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">${v.status}</span>
                 </div>
-                <p class="text-sm font-semibold text-slate-200">💎 Oportunidade: <span class="text-pink-300 font-normal">${v.tag}</span></p>
-                <p class="text-xs text-slate-400 bg-slate-950 p-2.5 rounded-xl border border-slate-800">🎯 <b>Estratégia:</b> ${v.tip}</p>
+                <h4 class="font-bold text-xs text-slate-100 line-clamp-2">${v.titulo}</h4>
               </div>
-              <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
-                <a href="${v.link}" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1 transition">
-                  <span>Assistir</span> ↗
+              
+              <div class="flex gap-2 pt-1">
+                <a href="${v.url}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1">
+                  📺 Assistir
                 </a>
-                <button onclick='saveIdea(${JSON.stringify(v)})' class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 font-medium transition text-slate-300">
-                  ⭐ Salvar
+                <button onclick="selecionarParaCorte('${v.url}')" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex-1 text-center">
+                  ✂️ Usar Este Vídeo
                 </button>
               </div>
             </div>
           `;
         });
       } catch (err) {
-        // Fallback local caso a API enfrente instabilidade
-        container.innerHTML = `
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-3">
-            <p class="text-pink-400 font-bold text-sm">📡 Modalidade de Pesquisa Direta Ativada:</p>
-            <p class="text-xs text-slate-300">Abrindo os resultados de pesquisas atualizadas em tempo real para o termo selecionado.</p>
-            <a href="https://www.tiktok.com/search?q=${encodeURIComponent(query || 'cortes podcast viral')}" target="_blank" class="inline-block bg-pink-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
-              Abrir Resultados Atualizados no TikTok ↗
-            </a>
-          </div>
-        `;
+        document.getElementById('radarLoading').classList.add('hidden');
       }
     }
 
-    function saveIdea(video) {
-      let saved = JSON.parse(localStorage.getItem('viral_ideas') || '[]');
-      saved.push(video);
-      localStorage.setItem('viral_ideas', JSON.stringify(saved));
-      alert('Salvo com sucesso!');
+    function selecionarParaCorte(url) {
+      document.getElementById('videoUrl').value = url;
+      document.getElementById('secaoProcessador').scrollIntoView({ behavior: 'smooth' });
+      gerarCortes();
     }
 
-    function loadIdeas() {
-      let saved = JSON.parse(localStorage.getItem('viral_ideas') || '[]');
-      const container = document.getElementById('ideasContainer');
-      container.innerHTML = saved.length ? '' : '<div class="text-center py-12 text-slate-500 text-sm">Nenhum item salvo ainda.</div>';
-      
-      saved.forEach(i => {
-        container.innerHTML += `
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
-            <div>
-              <p class="font-bold text-cyan-400">${i.creator}</p>
-              <p class="text-xs text-slate-400">${i.niche} • ${i.views}</p>
+    async function gerarCortes() {
+      const url = document.getElementById('videoUrl').value;
+      if (!url) {
+        alert('Por favor, insira o link de um vídeo do YouTube!');
+        return;
+      }
+
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('results').classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/autoclip', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await res.json();
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('results').classList.remove('hidden');
+
+        const container = document.getElementById('clipsContainer');
+        container.innerHTML = '';
+
+        data.clips.forEach((clip, index) => {
+          container.innerHTML += `
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="bg-pink-500/10 text-pink-400 text-xs font-bold px-2 py-0.5 rounded border border-pink-500/20">Corte #${index + 1} (${clip.tempo})</span>
+                <span class="text-xs text-emerald-400 font-mono">Potencial: ${clip.score}</span>
+              </div>
+              <p class="font-bold text-sm text-slate-100">${clip.titulo}</p>
+              <p class="text-xs text-slate-400"><b>Gancho Inicial:</b> "${clip.gancho}"</p>
+              <p class="text-xs text-cyan-300 bg-slate-900 p-2 rounded border border-slate-800"><b>Ação Recomendada:</b> ${clip.acao}</p>
+              <div class="flex gap-2 pt-1">
+                <a href="${clip.linkOpus}" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                  Exportar Editado ↗
+                </a>
+              </div>
             </div>
-            <a href="${i.link}" target="_blank" class="bg-cyan-600 text-xs font-bold px-3 py-2 rounded-xl">Abrir ↗</a>
-          </div>
-        `;
-      });
+          `;
+        });
+      } catch (err) {
+        document.getElementById('loading').classList.add('hidden');
+        alert('Erro ao processar o vídeo.');
+      }
     }
-
-    fetchRadarData();
   </script>
 </body>
 </html>
