@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIRAL RADAR & AUTO-CLIPPER</title>
+  <title>VIRAL RADAR & PLAYER</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
@@ -12,166 +12,160 @@
   <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-4 py-3">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2">
-        <span class="text-xl">🚀</span>
+        <span class="text-xl">📺</span>
         <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
-          VIRAL RADAR & CLIPPER
+          VIRAL RADAR <span class="text-xs bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded border border-pink-500/30">Player On-Site</span>
         </h1>
       </div>
-      <span class="text-xs bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded-full border border-cyan-500/30 font-bold">Automação Completa</span>
+      <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/30 font-bold">Player Ativo</span>
     </div>
   </header>
 
   <main class="max-w-4xl mx-auto p-4 space-y-6">
 
-    <!-- SEÇÃO 1: RADAR DE VÍDEOS EM ALTA (BUSCA AUTOMÁTICA) -->
-    <section class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-lg font-bold flex items-center gap-2">🔥 Radar de Vídeos em Alta no YouTube</h2>
-          <p class="text-xs text-slate-400">O robô encontra os melhores podcasts e vídeos recomendados para fazer cortes hoje.</p>
+    <!-- SEÇÃO 1: BUSCA E FILTROS -->
+    <section class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div class="w-full sm:flex-1">
+          <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Buscar / Termo Específico</label>
+          <input type="text" id="searchInput" placeholder="Ex: cortes podcast, finanças, motivação..." class="w-full bg-slate-800 text-white px-4 py-2.5 rounded-xl border border-slate-700 text-sm focus:outline-none focus:border-pink-500 transition">
+        </div>
+        <div class="w-full sm:w-auto">
+          <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Nicho</label>
+          <select id="nicheSelect" class="w-full sm:w-48 bg-slate-800 text-white px-3 py-2.5 rounded-xl border border-slate-700 text-sm focus:outline-none">
+            <option value="podcasts">🎙️ Podcasts / Cortes</option>
+            <option value="motivacional">💡 Motivação / Viradas</option>
+            <option value="negocios">💰 Finanças & Negócios</option>
+            <option value="curiosidades">🤖 Curiosidades & IA</option>
+          </select>
         </div>
       </div>
-
-      <!-- Filtros de Categoria -->
-      <div class="flex flex-wrap gap-2 pt-2">
-        <button onclick="buscarEmAlta('podcasts')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-cyan-300 font-medium">🎙️ Podcasts Famosos</button>
-        <button onclick="buscarEmAlta('motivacional')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-pink-300 font-medium">💡 Histórias / Viradas</button>
-        <button onclick="buscarEmAlta('negocios')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-emerald-300 font-medium">💰 Finanças & Negócios</button>
-        <button onclick="buscarEmAlta('curiosidades')" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-amber-300 font-medium">🧠 Curiosidades / IA</button>
-      </div>
-
-      <!-- Carregamento do Radar -->
-      <div id="radarLoading" class="hidden text-center py-4">
-        <p class="text-xs text-cyan-400 animate-pulse font-mono">🔍 Rastreando o YouTube em busca dos vídeos com maior engajamento recente...</p>
-      </div>
-
-      <!-- Lista de Vídeos Encontrados -->
-      <div id="radarContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"></div>
+      <button onclick="carregarRadar()" class="w-full bg-gradient-to-r from-cyan-600 to-pink-600 hover:from-cyan-500 hover:to-pink-500 text-white font-bold py-3 rounded-xl text-sm shadow-lg transition flex items-center justify-center gap-2">
+        <span>🔍 Buscar Vídeos no Player</span>
+      </button>
     </section>
 
+    <!-- LISTA DE VÍDEOS COM PLAYER INTEGRADO -->
+    <section class="space-y-4">
+      <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+        <span>🔥 Vídeos Recomendados (Assista Direto Abaixo)</span>
+      </h3>
 
-    <!-- SEÇÃO 2: PROCESSADOR E GERADOR DE CORTES -->
-    <section class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4" id="secaoProcessador">
-      <div class="text-center space-y-1">
-        <h2 class="text-lg font-bold">✂️ Gerador de Cortes por Inteligência Artificial</h2>
-        <p class="text-xs text-slate-400">Cole o link de um vídeo do YouTube ou escolha um vídeo acima no Radar.</p>
+      <div id="loading" class="hidden text-center py-8">
+        <p class="text-xs text-cyan-400 animate-pulse font-mono">📡 Carregando players e mapeando timestamps dos vídeos...</p>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-2 max-w-xl mx-auto">
-        <input type="text" id="videoUrl" placeholder="Cole aqui o link do YouTube..." class="bg-slate-800 border border-slate-700 text-white text-sm px-4 py-3 rounded-xl w-full focus:outline-none focus:border-pink-500">
-        <button onclick="gerarCortes()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition shrink-0">
-          ✂️ Processar Vídeo
-        </button>
+      <div id="videoContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Vídeos injetados dinamicamente -->
       </div>
+    </section>
 
-      <!-- Loading dos Cortes -->
-      <div id="loading" class="hidden text-center py-6 space-y-2">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-pink-500"></div>
-        <p class="text-xs text-cyan-400 font-mono">Mapeando picos de retenção e gerando sugestões de cortes...</p>
-      </div>
-
-      <!-- Resultados dos Cortes Gerados -->
-      <div id="results" class="hidden space-y-4">
-        <hr class="border-slate-800">
-        <h3 class="text-sm font-bold text-pink-400 uppercase tracking-wider">Cortes Prontos Identificados:</h3>
-        <div id="clipsContainer" class="grid gap-3"></div>
-      </div>
+    <!-- RESULTADO DE CORTES GERADOS DA IA -->
+    <section id="clipsSection" class="hidden bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+      <h3 class="text-sm font-bold text-pink-400 uppercase tracking-wider">✂️ Sugestões de Cortes Extraídas deste Vídeo:</h3>
+      <div id="clipsContainer" class="grid gap-3"></div>
     </section>
 
   </main>
 
   <script>
-    // Carrega o radar assim que abre a página
-    window.onload = () => buscarEmAlta('podcasts');
+    window.onload = carregarRadar;
 
-    async function buscarEmAlta(categoria) {
-      document.getElementById('radarLoading').classList.remove('hidden');
-      document.getElementById('radarContainer').innerHTML = '';
+    async function carregarRadar() {
+      const niche = document.getElementById('nicheSelect').value;
+      const q = document.getElementById('searchInput').value;
+
+      document.getElementById('loading').classList.remove('hidden');
+      const container = document.getElementById('videoContainer');
+      container.innerHTML = '';
 
       try {
-        const res = await fetch(`/api/radar?categoria=${categoria}`);
+        const res = await fetch(`/api/radar?categoria=${niche}&q=${encodeURIComponent(q)}`);
         const data = await res.json();
-        document.getElementById('radarLoading').classList.add('hidden');
+        document.getElementById('loading').classList.add('hidden');
 
-        const container = document.getElementById('radarContainer');
-        data.videos.forEach(v => {
+        if (!data.videos || data.videos.length === 0) {
+          container.innerHTML = '<p class="text-xs text-slate-500">Nenhum vídeo encontrado para este filtro.</p>';
+          return;
+        }
+
+        data.videos.forEach((v) => {
           container.innerHTML += `
-            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl flex flex-col justify-between space-y-3 hover:border-slate-700 transition">
-              <div class="space-y-1">
-                <div class="flex justify-between items-center text-[10px]">
-                  <span class="text-cyan-400 font-bold uppercase">${v.canal}</span>
-                  <span class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">${v.status}</span>
-                </div>
-                <h4 class="font-bold text-xs text-slate-100 line-clamp-2">${v.titulo}</h4>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-slate-700 transition">
+              <!-- Player do YouTube Incorporado -->
+              <div class="relative w-full aspect-video bg-black">
+                <iframe 
+                  class="w-full h-full" 
+                  src="https://www.youtube.com/embed/${v.youtubeId}" 
+                  title="${v.titulo}" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+                </iframe>
               </div>
-              
-              <div class="flex gap-2 pt-1">
-                <a href="${v.url}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1">
-                  📺 Assistir
-                </a>
-                <button onclick="selecionarParaCorte('${v.url}')" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex-1 text-center">
-                  ✂️ Usar Este Vídeo
-                </button>
+
+              <!-- Informações do Vídeo -->
+              <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                <div class="space-y-1">
+                  <div class="flex justify-between items-center text-[11px]">
+                    <span class="text-cyan-400 font-bold uppercase">${v.canal}</span>
+                    <span class="bg-pink-500/10 text-pink-400 px-2 py-0.5 rounded border border-pink-500/20 font-semibold">${v.status}</span>
+                  </div>
+                  <h4 class="font-bold text-sm text-slate-100 leading-snug line-clamp-2">${v.titulo}</h4>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800/80 flex gap-2">
+                  <button onclick="gerarCortesIAParaVideo('${v.youtubeId}', '${v.titulo}')" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white text-xs font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-1.5">
+                    <span>✂️ Extrair Cortes por IA</span>
+                  </button>
+                </div>
               </div>
             </div>
           `;
         });
       } catch (err) {
-        document.getElementById('radarLoading').classList.add('hidden');
+        document.getElementById('loading').classList.add('hidden');
+        container.innerHTML = '<p class="text-xs text-red-400">Erro ao carregar vídeos. Tente novamente.</p>';
       }
     }
 
-    function selecionarParaCorte(url) {
-      document.getElementById('videoUrl').value = url;
-      document.getElementById('secaoProcessador').scrollIntoView({ behavior: 'smooth' });
-      gerarCortes();
-    }
+    async function gerarCortesIAParaVideo(youtubeId, titulo) {
+      const clipsSection = document.getElementById('clipsSection');
+      const clipsContainer = document.getElementById('clipsContainer');
+      clipsSection.classList.remove('hidden');
+      clipsSection.scrollIntoView({ behavior: 'smooth' });
 
-    async function gerarCortes() {
-      const url = document.getElementById('videoUrl').value;
-      if (!url) {
-        alert('Por favor, insira o link de um vídeo do YouTube!');
-        return;
-      }
-
-      document.getElementById('loading').classList.remove('hidden');
-      document.getElementById('results').classList.add('hidden');
+      clipsContainer.innerHTML = '<div class="text-center py-4 text-xs text-cyan-400 animate-pulse font-mono">Analizando minutagem e retenção de áudio...</div>';
 
       try {
         const res = await fetch('/api/autoclip', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url })
+          body: JSON.stringify({ youtubeId, titulo })
         });
-
         const data = await res.json();
-        document.getElementById('loading').classList.add('hidden');
-        document.getElementById('results').classList.remove('hidden');
 
-        const container = document.getElementById('clipsContainer');
-        container.innerHTML = '';
-
+        clipsContainer.innerHTML = '';
         data.clips.forEach((clip, index) => {
-          container.innerHTML += `
+          clipsContainer.innerHTML += `
             <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
               <div class="flex justify-between items-center">
                 <span class="bg-pink-500/10 text-pink-400 text-xs font-bold px-2 py-0.5 rounded border border-pink-500/20">Corte #${index + 1} (${clip.tempo})</span>
-                <span class="text-xs text-emerald-400 font-mono">Potencial: ${clip.score}</span>
+                <span class="text-xs text-emerald-400 font-mono">Score: ${clip.score}</span>
               </div>
               <p class="font-bold text-sm text-slate-100">${clip.titulo}</p>
-              <p class="text-xs text-slate-400"><b>Gancho Inicial:</b> "${clip.gancho}"</p>
-              <p class="text-xs text-cyan-300 bg-slate-900 p-2 rounded border border-slate-800"><b>Ação Recomendada:</b> ${clip.acao}</p>
-              <div class="flex gap-2 pt-1">
-                <a href="${clip.linkOpus}" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
-                  Exportar Editado ↗
+              <p class="text-xs text-slate-400"><b>Gancho:</b> "${clip.gancho}"</p>
+              <p class="text-xs text-cyan-300 bg-slate-900 p-2 rounded border border-slate-800"><b>Instrução de Edição:</b> ${clip.acao}</p>
+              <div class="pt-1">
+                <a href="${clip.linkOpus}" target="_blank" class="inline-block bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                  Exportar Formatado no OpusClip ↗
                 </a>
               </div>
             </div>
           `;
         });
       } catch (err) {
-        document.getElementById('loading').classList.add('hidden');
-        alert('Erro ao processar o vídeo.');
+        clipsContainer.innerHTML = '<p class="text-xs text-red-400">Erro ao processar cortes.</p>';
       }
     }
   </script>
