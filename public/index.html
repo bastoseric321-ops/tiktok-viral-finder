@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIRAL FINDER PRO</title>
+  <title>VIRAL FINDER RADAR</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
@@ -11,84 +11,67 @@
   <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-4 py-3">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2">
-        <span class="text-xl">⚡</span>
-        <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-          VIRAL FINDER PRO
+        <span class="text-xl">📡</span>
+        <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
+          VIRAL RADAR <span class="text-xs bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded border border-pink-500/30">Oculto</span>
         </h1>
       </div>
-      <nav class="space-x-2 sm:space-x-4 text-sm font-medium">
-        <button onclick="showSection('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg bg-pink-600/20 text-pink-400 transition">Tendências</button>
-        <button onclick="showSection('cortes')" id="nav-cortes" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Analisador</button>
+      <nav class="space-x-2 text-sm font-medium">
+        <button onclick="showSection('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg bg-pink-600/20 text-pink-400 transition">Radar</button>
         <button onclick="showSection('ideias')" id="nav-ideias" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Salvos</button>
       </nav>
     </div>
   </header>
 
   <main class="max-w-4xl mx-auto p-4 space-y-6">
-    <!-- DASHBOARD SECTION -->
+    <!-- DASHBOARD -->
     <section id="sec-dashboard" class="space-y-4">
-      <!-- Painel de Controle de Nichos -->
-      <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div class="w-full sm:w-auto flex-1">
-          <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Nicho de Inteligência</label>
-          <select id="nicheSelect" onchange="fetchVirals()" class="w-full bg-slate-800 text-white px-4 py-2.5 rounded-xl border border-slate-700 text-sm focus:outline-none focus:border-pink-500 transition">
-            <option value="Todos">🌐 Todos os Nichos (Radar Global)</option>
-            <option value="Podcasts">🎙️ Podcasts & Cortes de Alta Retenção</option>
-            <option value="Humor">😂 Humor, Memes & Comédia</option>
-            <option value="Motivacao">🔥 Motivação & Desenvolvimento Pessoal</option>
-            <option value="Financas">💰 Finanças, Riqueza & Cripto</option>
-            <option value="Games">🎮 Games, Clips & eSports</option>
-            <option value="Culinaria">🍳 Culinária & Receitas Rápidas</option>
-            <option value="Tecnologia">🤖 Tecnologia & Inteligência Artificial</option>
-            <option value="Fitness">🏋️ Fitness, Saúde & Performance</option>
-            <option value="Curiosidades">🧠 Curiosidades & Fatos Ocultos</option>
-            <option value="Negocios">📈 Negócios, Vendas & Marketing</option>
-          </select>
+      <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3">
+        <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div class="w-full sm:flex-1">
+            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Busca Profunda / Termo Oculto</label>
+            <input type="text" id="customSearchInput" placeholder="Ex: cortes podcast, segredo finanças, IA oculta..." class="w-full bg-slate-800 text-white px-4 py-2.5 rounded-xl border border-slate-700 text-sm focus:outline-none focus:border-pink-500 transition">
+          </div>
+          <div class="w-full sm:w-auto">
+            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Nicho</label>
+            <select id="nicheSelect" class="w-full sm:w-48 bg-slate-800 text-white px-3 py-2.5 rounded-xl border border-slate-700 text-sm focus:outline-none">
+              <option value="Todos">Todos os Nichos</option>
+              <option value="Podcasts">🎙️ Podcasts / Cortes</option>
+              <option value="Humor">😂 Humor</option>
+              <option value="Motivacao">🔥 Motivação</option>
+              <option value="Financas">💰 Finanças</option>
+              <option value="Tecnologia">🤖 Tecnologia & IA</option>
+            </select>
+          </div>
         </div>
-        <button onclick="fetchVirals()" class="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow-lg shadow-pink-600/20 transition flex items-center justify-center gap-2">
-          <span>🔍 Varredura Real</span>
+        <button onclick="fetchRadarData()" class="w-full bg-gradient-to-r from-cyan-600 to-pink-600 hover:from-cyan-500 hover:to-pink-500 text-white font-bold py-3 rounded-xl text-sm shadow-lg transition flex items-center justify-center gap-2">
+          <span>🔍 Varredura em Todos os Lugares (Radar Oculto)</span>
         </button>
       </div>
 
-      <!-- Alerta de Sinal de Crescimento -->
-      <div class="bg-gradient-to-r from-purple-950/30 via-slate-900 to-slate-900 border border-purple-500/20 p-4 rounded-xl flex items-center gap-3">
-        <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400 text-lg">💡</div>
-        <div class="text-xs sm:text-sm">
-          <span class="font-bold text-purple-300">Radar em Tempo Real:</span> Os dados abaixo mostram criadores que estão crescendo rápido por causa de ganchos fortes nos primeiros 3 segundos. Escolha um e adapte a sua voz.
+      <div class="bg-cyan-950/20 border border-cyan-500/20 p-4 rounded-xl flex items-center gap-3">
+        <div class="text-cyan-400 text-lg">⚡</div>
+        <div class="text-xs text-slate-300">
+          <b>Modo Rastreador Ativado:</b> Buscando conteúdos recém-publicados com baixa visualização e alto potencial de explosão algorítmica.
         </div>
       </div>
 
-      <!-- Lista de Vídeos em Alta -->
-      <div id="viralsContainer" class="space-y-3">
-        <!-- Inserido dinamicamente via JS -->
+      <!-- Container de Resultados -->
+      <div id="radarContainer" class="space-y-3">
+        <!-- Inserido dinamicamente -->
       </div>
     </section>
 
-    <!-- CORTES SECTION -->
-    <section id="sec-cortes" class="hidden space-y-4">
-      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-center space-y-4 shadow-xl">
-        <h2 class="text-xl font-bold tracking-tight">Simulador de Retenção de Cortes</h2>
-        <p class="text-sm text-slate-400 max-w-md mx-auto">Insira o link de qualquer vídeo ou podcast para receber o diagnóstico de onde o público costuma ficar ou sair.</p>
-        <div class="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto">
-          <input type="text" id="analyzeInput" placeholder="Cole o link do YouTube, TikTok ou Instagram..." class="bg-slate-800 px-4 py-3 rounded-xl border border-slate-700 text-sm w-full text-white focus:outline-none focus:border-cyan-500">
-          <button onclick="runAnalysis()" class="bg-cyan-600 hover:bg-cyan-500 px-6 py-3 rounded-xl text-sm font-bold transition">Analisar</button>
-        </div>
-        <div id="analysisResult" class="hidden text-left bg-slate-950 p-4 rounded-xl border border-slate-800 mt-4 text-xs space-y-2"></div>
-      </div>
-    </section>
-
-    <!-- IDEIAS SECTION -->
+    <!-- IDEIAS -->
     <section id="sec-ideias" class="hidden space-y-4">
-      <h2 class="text-xl font-bold tracking-tight">Sua Base de Ideias Salvas</h2>
-      <div id="ideasContainer" class="grid gap-3">
-        <!-- Salvos -->
-      </div>
+      <h2 class="text-xl font-bold">Conteúdos Salvos para Produção</h2>
+      <div id="ideasContainer" class="grid gap-3"></div>
     </section>
   </main>
 
   <script>
     function showSection(name) {
-      ['dashboard', 'cortes', 'ideias'].forEach(sec => {
+      ['dashboard', 'ideias'].forEach(sec => {
         document.getElementById(`sec-${sec}`).classList.add('hidden');
         document.getElementById(`nav-${sec}`).className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition";
       });
@@ -97,59 +80,50 @@
       if (name === 'ideias') loadIdeas();
     }
 
-    async function fetchVirals() {
+    async function fetchRadarData() {
       const niche = document.getElementById('nicheSelect').value;
-      const res = await fetch(`/api/virals?niche=${encodeURIComponent(niche)}`);
-      const videos = await res.json();
+      const query = document.getElementById('customSearchInput').value;
       
-      const container = document.getElementById('viralsContainer');
-      container.innerHTML = '';
+      const container = document.getElementById('radarContainer');
+      container.innerHTML = '<div class="text-center py-12 text-cyan-400 text-sm animate-pulse">📡 Escaneando fontes ocultas e conteúdos recentes...</div>';
 
-      if (videos.length === 0) {
-        container.innerHTML = '<div class="text-center py-12 text-slate-500 text-sm">Nenhum padrão encontrado para este nicho no momento.</div>';
-        return;
-      }
+      try {
+        const res = await fetch(`/api/radar?niche=${encodeURIComponent(niche)}&q=${encodeURIComponent(query)}`);
+        const videos = await res.json();
+        
+        container.innerHTML = '';
 
-      videos.forEach(v => {
-        container.innerHTML += `
-          <div class="bg-slate-900/90 border border-slate-800/80 hover:border-slate-700 p-4 sm:p-5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition shadow-lg">
-            <div class="space-y-1.5 flex-1">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-bold text-pink-400 text-base">${v.creator}</span>
-                <span class="bg-pink-500/10 text-pink-400 border border-pink-500/20 px-2.5 py-0.5 rounded-full text-xs font-semibold">${v.niche}</span>
-                <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2.5 py-0.5 rounded-full text-xs font-bold">🔥 ${v.views}</span>
-                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-xs font-mono">⚡ ${v.velocity || '+240% em 24h'}</span>
+        if (videos.length === 0) {
+          container.innerHTML = '<div class="text-center py-12 text-slate-500 text-sm">Nenhum resultado recente encontrado com este filtro. Tente outro termo.</div>';
+          return;
+        }
+
+        videos.forEach(v => {
+          container.innerHTML += `
+            <div class="bg-slate-900 border border-slate-800 hover:border-cyan-500/50 p-4 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition shadow-lg">
+              <div class="space-y-1 flex-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-bold text-cyan-400 text-sm">${v.creator}</span>
+                  <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2 py-0.5 rounded text-xs">${v.niche}</span>
+                  <span class="bg-pink-500/10 text-pink-400 border border-pink-500/20 px-2 py-0.5 rounded text-xs font-semibold">👀 ${v.views} (Início de Curva)</span>
+                </div>
+                <p class="text-sm font-semibold text-slate-200">💎 Oportunidade: <span class="text-pink-300 font-normal">${v.tag}</span></p>
+                <p class="text-xs text-slate-400 bg-slate-950 p-2.5 rounded-xl border border-slate-800">🎯 <b>Estratégia de Captura:</b> ${v.tip}</p>
               </div>
-              <p class="text-sm font-medium text-slate-200"><span class="text-slate-400">Gatilho/Padrão:</span> <span class="text-cyan-300">${v.tag}</span></p>
-              <p class="text-xs text-slate-400 bg-slate-950/50 p-2.5 rounded-xl border border-slate-800/50">🎯 <b>Estratégia de Roteiro:</b> ${v.tip}</p>
+              <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
+                <a href="${v.link}" target="_blank" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1 transition">
+                  <span>Ver Fonte Original</span> ↗
+                </a>
+                <button onclick='saveIdea(${JSON.stringify(v)})' class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 font-medium transition text-slate-300">
+                  ⭐ Salvar
+                </button>
+              </div>
             </div>
-            <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
-              <a href="${v.link}" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition shadow-md">
-                <span>Ver Original</span> ↗
-              </a>
-              <button onclick='saveIdea(${JSON.stringify(v)})' class="bg-slate-800 hover:bg-slate-700 text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 font-medium transition text-slate-300">
-                ⭐ Salvar
-              </button>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function runAnalysis() {
-      const input = document.getElementById('analyzeInput').value;
-      const resultBox = document.getElementById('analysisResult');
-      if(!input) {
-        alert('Cole um link válido primeiro.');
-        return;
+          `;
+        });
+      } catch (err) {
+        container.innerHTML = '<div class="text-center py-12 text-red-400 text-sm">Erro ao conectar com o radar. Tente novamente.</div>';
       }
-      resultBox.classList.remove('hidden');
-      resultBox.innerHTML = `
-        <p class="text-cyan-400 font-bold">📊 Diagnóstico Concluído com Sucesso:</p>
-        <p>• <b>Retenção Inicial (0-3s):</b> Excelente. Gancho visual detectado.</p>
-        <p>• <b>Pico de Compartilhamento:</b> Estimado entre o segundo 15 e 28.</p>
-        <p>• <b>Recomendação da IA:</b> Adicione legendas dinâmicas a cada 2 palavras e corte os respiros do áudio para prender o espectador até o final.</p>
-      `;
     }
 
     async function saveIdea(video) {
@@ -158,31 +132,29 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(video)
       });
-      alert('Conteúdo salvo com sucesso na sua aba Ideias!');
+      alert('Salvo na sua base de produção!');
     }
 
     async function loadIdeas() {
       const res = await fetch('/api/ideas');
       const ideas = await res.json();
       const container = document.getElementById('ideasContainer');
-      container.innerHTML = ideas.length ? '' : '<div class="text-center py-12 text-slate-500 text-sm">Nenhum conteúdo salvo. Clique em "Salvar" nos cards de tendências.</div>';
+      container.innerHTML = ideas.length ? '' : '<div class="text-center py-12 text-slate-500 text-sm">Nenhum item salvo ainda.</div>';
       
       ideas.forEach(i => {
         container.innerHTML += `
           <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
             <div>
-              <p class="font-bold text-pink-400">${i.creator}</p>
-              <p class="text-xs text-slate-400">${i.niche} • ${i.views} (${i.velocity || 'Alta performance'})</p>
+              <p class="font-bold text-cyan-400">${i.creator}</p>
+              <p class="text-xs text-slate-400">${i.niche} • ${i.views}</p>
             </div>
-            <a href="${i.link}" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-xs font-bold px-3 py-2 rounded-lg transition">
-              Abrir Link ↗
-            </a>
+            <a href="${i.link}" target="_blank" class="bg-cyan-600 text-xs font-bold px-3 py-2 rounded-xl">Abrir ↗</a>
           </div>
         `;
       });
     }
 
-    fetchVirals();
+    fetchRadarData();
   </script>
 </body>
 </html>
